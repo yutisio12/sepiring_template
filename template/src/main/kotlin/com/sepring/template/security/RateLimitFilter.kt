@@ -18,7 +18,8 @@ class RateLimitFilter(
     @Value("\${app.rate-limit.public.capacity:100}") private val publicCapacity: Long,
     @Value("\${app.rate-limit.public.refill-per-minute:100}") private val publicRefill: Long,
     @Value("\${app.rate-limit.authenticated.capacity:60}") private val authCapacity: Long,
-    @Value("\${app.rate-limit.authenticated.refill-per-minute:60}") private val authRefill: Long
+    @Value("\${app.rate-limit.authenticated.refill-per-minute:60}") private val authRefill: Long,
+    @Value("\${app.rate-limit.reset-seconds:60}") private val resetSeconds: Long
 ) : OncePerRequestFilter() {
 
     private val buckets = ConcurrentHashMap<String, Bucket>()
@@ -56,7 +57,7 @@ class RateLimitFilter(
             Bucket.builder()
                 .addLimit { limit ->
                     limit.capacity(capacity)
-                        .refillGreedy(refill, Duration.ofMinutes(1))
+                        .refillGreedy(refill, Duration.ofSeconds(resetSeconds))
                 }
                 .build()
         }
@@ -66,8 +67,8 @@ class RateLimitFilter(
         } else {
             response.status = HttpStatus.TOO_MANY_REQUESTS.value()
             response.contentType = MediaType.APPLICATION_JSON_VALUE
-            response.setHeader("Retry-After", "60")
-            response.writer.write("""{"error":"Too Many Requests","message":"Rate limit exceeded. Try again in 60 seconds."}""")
+            response.setHeader("Retry-After", resetSeconds.toString())
+            response.writer.write("""{"error":"Too Many Requests","message":"Rate limit exceeded. Try again in $resetSeconds seconds."}""")
         }
     }
 
