@@ -3,6 +3,7 @@ package com.sepring.template.controller
 import com.sepring.template.model.Item
 import com.sepring.template.service.ItemService
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -36,6 +37,7 @@ private fun Item.toResponse() = ItemResponse(
 @RestController
 @RequestMapping("/api/items")
 @Tag(name = "Items", description = "CRUD template — requires Bearer JWT")
+@SecurityRequirement(name = "bearer-jwt")
 class ItemController(private val itemService: ItemService) {
 
     @GetMapping
