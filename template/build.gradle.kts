@@ -25,6 +25,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-webmvc")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("tools.jackson.module:jackson-module-kotlin")
+	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("com.bucket4j:bucket4j_jdk17-core:8.19.0")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.3")
