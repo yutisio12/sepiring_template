@@ -5,6 +5,9 @@ import com.sepring.template.service.ItemService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Valid
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.Size
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -16,7 +19,12 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 
-data class ItemRequest(val name: String, val description: String?)
+data class ItemRequest(
+    @field:NotBlank @field:Size(max = 255)
+    val name: String,
+    @field:Size(max = 2000)
+    val description: String?
+)
 
 data class ItemResponse(
     val id: Long,
@@ -52,12 +60,12 @@ class ItemController(private val itemService: ItemService) {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a new item")
-    fun create(@RequestBody request: ItemRequest): ItemResponse =
+    fun create(@Valid @RequestBody request: ItemRequest): ItemResponse =
         itemService.create(request.name, request.description).toResponse()
 
     @PutMapping("/{id}")
     @Operation(summary = "Update an existing item")
-    fun update(@PathVariable id: Long, @RequestBody request: ItemRequest): ItemResponse =
+    fun update(@PathVariable id: Long, @Valid @RequestBody request: ItemRequest): ItemResponse =
         itemService.update(id, request.name, request.description).toResponse()
 
     @DeleteMapping("/{id}")

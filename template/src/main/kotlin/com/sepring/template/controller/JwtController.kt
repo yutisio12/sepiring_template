@@ -7,6 +7,9 @@ import io.swagger.v3.oas.annotations.media.ExampleObject
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Valid
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.Size
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController
 @Schema(description = "Request body untuk generate token")
 data class TokenRequest(
     @Schema(description = "Input bebas, text atau angka", example = "order-12345", required = true)
+    @field:NotBlank @field:Size(max = 1000)
     val input: String
 )
 
@@ -27,6 +31,7 @@ data class TokenResponse(
 @Schema(description = "Request body untuk validasi token")
 data class ValidateRequest(
     @Schema(description = "JWT Bearer token", example = "Bearer eyJhbGciOiJIUzI1NiJ9...", required = true)
+    @field:NotBlank @field:Size(max = 5000)
     val token: String
 )
 
@@ -59,7 +64,7 @@ class JwtController(private val jwtService: JwtService) {
         description = "Token berhasil digenerate",
         content = [Content(schema = Schema(implementation = TokenResponse::class))]
     )
-    fun generateToken(@RequestBody request: TokenRequest): TokenResponse {
+    fun generateToken(@Valid @RequestBody request: TokenRequest): TokenResponse {
         val jwt = jwtService.generateToken(request.input)
         return TokenResponse("Bearer $jwt")
     }
@@ -74,7 +79,7 @@ class JwtController(private val jwtService: JwtService) {
         description = "Token valid atau tidak",
         content = [Content(schema = Schema(implementation = ValidateResponse::class))]
     )
-    fun validateToken(@RequestBody request: ValidateRequest): ValidateResponse {
+    fun validateToken(@Valid @RequestBody request: ValidateRequest): ValidateResponse {
         val token = request.token.removePrefix("Bearer ").trim()
         val valid = jwtService.validateToken(token)
         if (!valid) return ValidateResponse(false, null, null, null, null)
