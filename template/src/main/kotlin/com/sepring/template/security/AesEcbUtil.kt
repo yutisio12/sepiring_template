@@ -10,7 +10,7 @@ import java.security.SecureRandom
 
 @Component
 class AesEcbUtil(
-    @Value("\${app.aes-cbc.key:}") private val aesKey: String
+    @Value("\${app.aes-cbc.key}") private val aesKey: String
 ) {
     private val keySpec: SecretKeySpec by lazy {
         val keyBytes = Base64.getDecoder().decode(aesKey)

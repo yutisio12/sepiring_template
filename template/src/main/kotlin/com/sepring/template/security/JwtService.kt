@@ -12,7 +12,7 @@ import java.util.Date
 
 @Service
 class JwtService(
-    @Value("\${app.jwt.secret:}") private val jwtSecret: String,
+    @Value("\${app.jwt.secret}") private val jwtSecret: String,
     @Value("\${app.jwt.expiration:86400000}") private val expirationMs: Long,
     private val aesEcbUtil: AesEcbUtil
 ) {

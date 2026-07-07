@@ -25,6 +25,15 @@ class SecurityConfig(
                 auth.requestMatchers("/api/items/**").authenticated()
                 auth.anyRequest().permitAll()
             }
+            .headers { headers ->
+                headers
+                    .xssProtection { xss -> xss.headerValue(org.springframework.security.web.header.writers.XXssProtectionHeaderWriter.HeaderValue.ENABLED_MODE_BLOCK) }
+                    .contentSecurityPolicy { csp ->
+                        csp.policyDirectives("default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; frame-ancestors 'none'")
+                    }
+                    .referrerPolicy { referrer -> referrer.policy(org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter.ReferrerPolicy.NO_REFERRER) }
+                    .frameOptions { frame -> frame.deny() }
+            }
         return http.build()
     }
 }
