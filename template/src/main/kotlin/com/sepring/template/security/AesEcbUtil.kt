@@ -10,8 +10,12 @@ import java.security.SecureRandom
 
 @Component
 class AesEcbUtil(
-    @Value("\${app.aes-cbc.key}") private val aesKey: String
+    @Value("\${app.aes-cbc.key:}") private val aesKey: String
 ) {
+    init {
+        require(aesKey.isNotBlank()) { "AES_KEY_B64 environment variable is required" }
+    }
+
     private val keySpec: SecretKeySpec by lazy {
         val keyBytes = Base64.getDecoder().decode(aesKey)
         SecretKeySpec(keyBytes, "AES")
