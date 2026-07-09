@@ -1,0 +1,25 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Build
+build/
+.gradle/
+.kotlin/
+
+# Environment
+.env*
+!.env.example
+
+# Documentation
+*.md
+HELP.md
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Docker
+docker-compose.yml

@@ -1,0 +1,38 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: template_db
+      POSTGRES_USER: template
+      POSTGRES_PASSWORD: template_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U template -d template_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      APP_NAME: template
+      DATABASE_URL: jdbc:postgresql://postgres:5432/template_db
+      DATABASE_USERNAME: template
+      DATABASE_PASSWORD: template_password
+      DATABASE_DRIVER: org.postgresql.Driver
+      JWT_SECRET: ${JWT_SECRET}
+      AES_KEY_B64: ${AES_KEY_B64}
+      LOG_LEVEL_ROOT: WARN
+      LOG_LEVEL_APP: INFO
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
