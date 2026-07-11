@@ -4,7 +4,9 @@ import io.github.bucket4j.Bucket
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.core.annotation.Order
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.security.core.context.SecurityContextHolder
@@ -22,6 +24,7 @@ class RateLimitFilter(
     @Value("\${app.rate-limit.reset-seconds:60}") private val resetSeconds: Long
 ) : OncePerRequestFilter() {
 
+    private val log = LoggerFactory.getLogger(RateLimitFilter::class.java)
     private val buckets = ConcurrentHashMap<String, Bucket>()
 
     override fun shouldNotFilter(request: HttpServletRequest): Boolean {
@@ -65,6 +68,7 @@ class RateLimitFilter(
         if (bucket.tryConsume(1)) {
             filterChain.doFilter(request, response)
         } else {
+            log.warn("Rate limit exceeded: key={}, path={}, method={}, clientIp={}", key, request.requestURI, request.method, extractClientIp(request))
             response.status = HttpStatus.TOO_MANY_REQUESTS.value()
             response.contentType = MediaType.APPLICATION_JSON_VALUE
             response.setHeader("Retry-After", resetSeconds.toString())
