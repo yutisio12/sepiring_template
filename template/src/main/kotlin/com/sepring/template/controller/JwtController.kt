@@ -50,8 +50,8 @@ data class ValidateResponse(
 )
 
 @RestController
-@RequestMapping("/api/auth")
-@Tag(name = "JWT Token", description = "Generate dan validasi JWT Bearer token dengan enkripsi AES-CBC")
+@RequestMapping("/api/v1/auth")
+@Tag(name = "JWT Legacy", description = "Generate dan validasi JWT Bearer token dengan enkripsi AES-CBC (legacy)")
 class JwtController(private val jwtService: JwtService) {
 
     @PostMapping("/generate-token")

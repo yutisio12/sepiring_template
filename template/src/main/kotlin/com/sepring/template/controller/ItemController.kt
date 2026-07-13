@@ -1,5 +1,7 @@
 package com.sepring.template.controller
 
+import com.sepring.template.dto.PageResponse
+import com.sepring.template.dto.PaginationRequest
 import com.sepring.template.model.Item
 import com.sepring.template.service.ItemService
 import io.swagger.v3.oas.annotations.Operation
@@ -43,14 +45,25 @@ private fun Item.toResponse() = ItemResponse(
 )
 
 @RestController
-@RequestMapping("/api/items")
+@RequestMapping("/api/v1/items")
 @Tag(name = "Items", description = "CRUD template — requires Bearer JWT")
 @SecurityRequirement(name = "bearer-jwt")
 class ItemController(private val itemService: ItemService) {
 
     @GetMapping
-    @Operation(summary = "List all items")
-    fun findAll(): List<ItemResponse> = itemService.findAll().map { it.toResponse() }
+    @Operation(summary = "List items with pagination")
+    fun findAll(request: PaginationRequest): PageResponse<ItemResponse> {
+        val page = itemService.findAll(request.page, request.size, request.sort)
+        return PageResponse(
+            content = page.content.map { it.toResponse() },
+            page = page.page,
+            size = page.size,
+            totalElements = page.totalElements,
+            totalPages = page.totalPages,
+            first = page.first,
+            last = page.last
+        )
+    }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get item by ID")

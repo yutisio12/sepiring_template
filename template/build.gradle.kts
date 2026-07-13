@@ -4,6 +4,7 @@ plugins {
 	id("org.springframework.boot") version "4.0.7"
 	id("io.spring.dependency-management") version "1.1.7"
 	kotlin("plugin.jpa") version "2.2.21"
+	id("org.flywaydb.flyway") version "11.7.2"
 }
 
 group = "com.sepring"
@@ -40,9 +41,23 @@ dependencies {
 	developmentOnly(platform("me.paulschwarz:spring-dotenv-bom:5.1.0"))
 	developmentOnly("me.paulschwarz:springboot4-dotenv")
 	annotationProcessor("org.projectlombok:lombok")
+
+	// ---- Flyway Migration ----
+	implementation("org.flywaydb:flyway-core")
+	runtimeOnly("org.flywaydb:flyway-database-postgresql")
+
+	// ---- Actuator (Health Check) ----
+	implementation("org.springframework.boot:spring-boot-starter-actuator")
+
+	// ---- File Upload (SFTP/FTP) ----
+	implementation("com.github.mwiede:jsch:0.2.17")
+	implementation("commons-net:commons-net:3.11.1")
+
+	// ---- Test ----
 	testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-thymeleaf-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testCompileOnly("org.projectlombok:lombok")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
