@@ -46,12 +46,12 @@ private fun Item.toResponse() = ItemResponse(
 
 @RestController
 @RequestMapping("/api/v1/items")
-@Tag(name = "Items", description = "CRUD template — requires Bearer JWT")
+@Tag(name = "Items", description = "Template — requires Bearer JWT")
 @SecurityRequirement(name = "bearer-jwt")
 class ItemController(private val itemService: ItemService) {
 
     @GetMapping
-    @Operation(summary = "List items with pagination")
+    @Operation(summary = "List item with pagination")
     fun findAll(request: PaginationRequest): PageResponse<ItemResponse> {
         val page = itemService.findAll(request.page, request.size, request.sort)
         return PageResponse(
