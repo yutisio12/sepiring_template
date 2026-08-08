@@ -47,7 +47,7 @@ private fun Item.toResponse() = ItemResponse(
 @RestController
 @RequestMapping("/api/v1/items")
 @Tag(name = "Items", description = "Template — requires Bearer JWT")
-@SecurityRequirement(name = "bearer-jwt")
+@SecurityRequirement(name = "bearer")
 class ItemController(private val itemService: ItemService) {
 
     @GetMapping
