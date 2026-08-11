@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 data class RegisterRequestDto(
-    @field:NotBlank @field:Size(min = 3, max = 50)
+    @field:NotBlank @field:Size(min = 5, max = 50)
     val username: String,
     @field:NotBlank @field:Size(min = 6, max = 100)
     val password: String
