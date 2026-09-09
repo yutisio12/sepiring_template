@@ -42,7 +42,7 @@ data class AuthResponseDto(
 
 @RestController
 @RequestMapping("/api/v1/auth")
-@Tag(name = "Authentication", description = "Register, login, and refresh JWT tokens")
+@Tag(name = "Authentication Controller", description = "Register, login, and refresh JWT tokens")
 class AuthController(
     private val authService: AuthService
 ) {
