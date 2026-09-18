@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap
 class RateLimitFilter(
     @Value("\${app.rate-limit.public.capacity:100}") private val publicCapacity: Long,
     @Value("\${app.rate-limit.public.refill-per-minute:100}") private val publicRefill: Long,
-    @Value("\${app.rate-limit.authenticated.capacity:60}") private val authCapacity: Long,
+    @Value("\${app.rate-limit.authenticated.capacity:50}") private val authCapacity: Long,
     @Value("\${app.rate-limit.authenticated.refill-per-minute:60}") private val authRefill: Long,
     @Value("\${app.rate-limit.reset-seconds:60}") private val resetSeconds: Long
 ) : OncePerRequestFilter() {
