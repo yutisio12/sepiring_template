@@ -65,6 +65,6 @@ class FileController(
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(summary = "Delete a file")
+    @Operation(summary = "Delete file")
     fun delete(@PathVariable id: Long) = fileService.delete(id)
 }
