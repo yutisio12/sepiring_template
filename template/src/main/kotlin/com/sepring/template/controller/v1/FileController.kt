@@ -47,7 +47,7 @@ class FileController(
     private val fileService: FileService
 ) {
     @PostMapping("/upload")
-    @Operation(summary = "Upload a file")
+    @Operation(summary = "Upload one file")
     fun upload(
         @RequestParam("file") file: MultipartFile,
         auth: Authentication?
